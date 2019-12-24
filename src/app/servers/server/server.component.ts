@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 
 import { ServersService } from "../servers.service";
-import { ActivatedRoute, Params } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -16,13 +16,13 @@ export class ServerComponent implements OnInit {
 
   constructor(
     private serversService: ServersService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
     const startingId = this.getServerIdFromRoute();
     this.server = this.serversService.getServer(startingId);
-    console.log("server ", this.server);
     this.idSubscription = this.subscribeToIdChange();
   }
 
@@ -33,7 +33,12 @@ export class ServerComponent implements OnInit {
   subscribeToIdChange(): Subscription {
     return this.route.params.subscribe((params: Params) => {
       this.server = this.serversService.getServer(parseInt(params["id"] || 1));
-      console.log("server updated ", this.server);
+    });
+  }
+  onEdit(): void {
+    this.router.navigate(["edit"], {
+      relativeTo: this.route,
+      queryParamsHandling: "preserve"
     });
   }
 }
