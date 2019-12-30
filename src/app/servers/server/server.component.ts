@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 
 import { ServersService } from "../servers.service";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import { ActivatedRoute, Params, Router, Data } from "@angular/router";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -11,30 +11,34 @@ import { Subscription } from "rxjs";
 })
 export class ServerComponent implements OnInit {
   server: { id: number; name: string; status: string };
-  idSubscription: Subscription;
-  serverId: number;
+  // idSubscription: Subscription;
+  // serverId: number;
 
   constructor(
-    private serversService: ServersService,
+    // private serversService: ServersService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit() {
-    const startingId = this.getServerIdFromRoute();
-    this.server = this.serversService.getServer(startingId);
-    this.idSubscription = this.subscribeToIdChange();
-  }
-
-  getServerIdFromRoute(): number {
-    return +this.route.snapshot.params["id"];
-  }
-
-  subscribeToIdChange(): Subscription {
-    return this.route.params.subscribe((params: Params) => {
-      this.server = this.serversService.getServer(parseInt(params["id"] || 1));
+    // const startingId = this.getServerIdFromRoute();
+    // this.server = this.serversService.getServer(startingId);
+    // this.idSubscription = this.subscribeToIdChange();
+    this.route.data.subscribe((data: Data) => {
+      this.server = data["resolvedServer"];
     });
   }
+
+  // getServerIdFromRoute(): number {
+  //   return +this.route.snapshot.params["id"];
+  // }
+
+  // subscribeToIdChange(): Subscription {
+  //   return this.route.params.subscribe((params: Params) => {
+  //     this.server = this.serversService.getServer(parseInt(params["id"] || 1));
+  //   });
+  // }
+
   onEdit(): void {
     this.router.navigate(["edit"], {
       relativeTo: this.route,
