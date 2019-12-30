@@ -1,0 +1,5 @@
+{
+    "editor.tabSize": 2,
+    "html.format.endWithNewline": true,
+    "html-css-class-completion.enableEmmetSupport": true
+}
